@@ -24,7 +24,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onTogglePasswordVisibility(
-      TogglePasswordVisibility event, Emitter<LoginState> emit) {
+    TogglePasswordVisibility event,
+    Emitter<LoginState> emit,
+  ) {
     emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
   }
 
@@ -32,13 +34,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(status: Status.loading));
 
     try {
-      await service.login(state.username, state.password);
-      emit(state.copyWith(status: Status.success));
+      final user = await service.login(state.username, state.password);
+      emit(state.copyWith(status: Status.success, user: user));
     } catch (e) {
-      emit(state.copyWith(
-        status: Status.failure,
-        message: e.toString(),
-      ));
+      emit(state.copyWith(status: Status.failure, message: e.toString()));
     }
   }
 }

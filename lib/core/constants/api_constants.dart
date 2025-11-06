@@ -1,6 +1,7 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ApiConstants {
-  static const String baseUrl = 'http://10.0.2.2:8080/api/v1';
-  // static const String baseUrl = 'https://eduspace-platform-production-e783.up.railway.app/api/v1';
+  static String get baseUrl => dotenv.env['API_BASE_URL'] ?? '';
 
   static const String signInEndpoint = '/Authentication/sign-in';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:eduspace_flutter_app/presentation/widgets/side_menu.dart'; 
 
 void main() {
   runApp(const MainApp());
@@ -9,10 +10,22 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+        drawer: const SideMenu(), 
+        
+        appBar: AppBar(
+          title: const Text('Prueba Sidebar'),
+          backgroundColor: const Color(0xFF4285F4), // Azul Eduspace
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(
+          child: Text(
+            'Presiona el icono de menú (≡)\narriba a la izquierda',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
         ),
       ),
     );

@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
         drawer: const SideMenu(), 
         
         appBar: AppBar(
-          title: const Text('Prueba Sidebar'),
+          title: const Text('EduSpace'),
           backgroundColor: const Color(0xFF4285F4), // Azul Eduspace
           foregroundColor: Colors.white,
         ),

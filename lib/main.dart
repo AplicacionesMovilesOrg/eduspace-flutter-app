@@ -1,3 +1,5 @@
+import 'package:eduspace_flutter_app/core/ui/theme.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/reservation_create_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,11 +11,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    final textTheme = Theme.of(context).textTheme;
+    final materialTheme = MaterialTheme(textTheme);
+
+    return MaterialApp(
+      title: 'EduSpace Reservations',
+      theme: materialTheme.light(),
+      darkTheme: materialTheme.dark(),
+      themeMode: ThemeMode.light, 
+      debugShowCheckedModeBanner: false,
+      home: const ReservationCreatePage(
+        teacherId: "1", 
+        areaId: "1",    
       ),
     );
   }

@@ -5,12 +5,13 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryBlue = const Color(0xFF4285F4); // Azul encabezado
+    // Definimos los colores exactos del diseño "Eduspace"
+    final Color primaryBlue = const Color(0xFF4285F4); // Azul principal
     final Color selectedBg = const Color(0xFFE3F2FD);  // Fondo item seleccionado
     final Color logoutRed = const Color(0xFFD32F2F);   // Rojo logout
-    final Color textDark = const Color(0xFF1F1F1F);    // Texto normal
+    final Color textDark = const Color(0xFF1F1F1F);    // Texto general
     
-    // Estilo de texto común
+    // Estilo de texto base
     final TextStyle menuTextStyle = const TextStyle(
       fontSize: 15,
       fontWeight: FontWeight.w500,
@@ -18,19 +19,20 @@ class SideMenu extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
+      // Quitamos el borde redondeado del drawer para que sea recto
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(0), 
-          bottomRight: Radius.circular(0)
-        ),
+        borderRadius: BorderRadius.zero,
       ),
       child: Column(
         children: [
+          // ------------------------------------------------
+          // 1. HEADER (Título Azul)
+          // ------------------------------------------------
           Container(
             width: double.infinity,
             height: 120, 
             color: primaryBlue,
-            alignment: Alignment.center, // Centrado vertical y horizontal
+            alignment: Alignment.center, 
             child: SafeArea(
               bottom: false,
               child: const Text(
@@ -47,17 +49,17 @@ class SideMenu extends StatelessWidget {
           const SizedBox(height: 16),
 
           // ------------------------------------------------
-          // 2. BODY (Lista de opciones)
+          // 2. BODY (Nuevas Opciones del Menú)
           // ------------------------------------------------
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
-                // Item Seleccionado: HOME
+                // Opción 1: Home (Seleccionada por defecto)
                 _buildMenuItem(
-                  icon: Icons.home_filled,
+                  icon: Icons.home_filled, 
                   text: 'Home',
-                  isSelected: true,
+                  isSelected: true, // Item activo (azul)
                   activeColor: primaryBlue,
                   activeBg: selectedBg,
                   textColor: textDark,
@@ -65,53 +67,39 @@ class SideMenu extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                 ),
                 
-                // Items Inactivos
+                // Opción 2: Reservations
                 _buildMenuItem(
-                  icon: Icons.door_front_door_outlined,
-                  text: 'Classrooms',
+                  icon: Icons.edit_document, // Icono de lista con lápiz
+                  text: 'Reservations',
                   isSelected: false,
                   activeColor: primaryBlue,
                   activeBg: selectedBg,
                   textColor: textDark,
                   textStyle: menuTextStyle,
-                  onTap: () {},
+                  onTap: () {
+                    // Navegación a Reservas
+                  },
                 ),
+
+                // Opción 3: Breakdown Reports
                 _buildMenuItem(
-                  icon: Icons.groups_outlined,
-                  text: 'Shared Spaces',
+                  icon: Icons.campaign_outlined, // Icono de megáfono
+                  text: 'Breakdown Reports',
                   isSelected: false,
                   activeColor: primaryBlue,
                   activeBg: selectedBg,
                   textColor: textDark,
                   textStyle: menuTextStyle,
-                  onTap: () {},
-                ),
-                _buildMenuItem(
-                  icon: Icons.calendar_today_outlined,
-                  text: 'Meetings',
-                  isSelected: false,
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
-                  textStyle: menuTextStyle,
-                  onTap: () {},
-                ),
-                _buildMenuItem(
-                  icon: Icons.person_outline,
-                  text: 'Teachers',
-                  isSelected: false,
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
-                  textStyle: menuTextStyle,
-                  onTap: () {},
+                  onTap: () {
+                    // Navegación a Reportes
+                  },
                 ),
               ],
             ),
           ),
 
           // ------------------------------------------------
-          // 3. FOOTER (Logout y Selector de Idioma)
+          // 3. FOOTER (Logout y Lenguaje - Se mantienen igual)
           // ------------------------------------------------
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
@@ -119,30 +107,33 @@ class SideMenu extends StatelessWidget {
               children: [
                 const Divider(height: 30, thickness: 1),
                 
-                // Opción Logout
+                // Botón Logout (Rojo)
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(Icons.logout, color: logoutRed),
                   title: Text(
                     'Logout',
-                    style: menuTextStyle.copyWith(color: logoutRed),
+                    style: menuTextStyle.copyWith(
+                      color: logoutRed,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   onTap: () {},
                 ),
                 
                 const SizedBox(height: 10),
 
-                // Selector de Idioma (Caja Gris)
+                // Selector de Idioma (Caja Gris Redondeada)
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF0F0F5), // Gris claro del fondo
+                    color: const Color(0xFFF0F0F5), 
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Etiqueta Izquierda
+                      // Texto "Language"
                       Row(
                         children: [
                           const SizedBox(width: 8),
@@ -158,9 +149,10 @@ class SideMenu extends StatelessWidget {
                         ],
                       ),
                       
-                      // Toggle Switch (Caja blanca con borde)
+                      // Toggle Switch
                       Container(
                         height: 36,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -169,14 +161,9 @@ class SideMenu extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Opción Seleccionada (EN)
-                            _buildLanguageItem('EN', '🇬🇧', true),
-                            
-                            // Separador vertical
-                            Container(width: 1, height: 20, color: Colors.grey.shade300),
-                            
-                            // Opción Inactiva (ES)
-                            _buildLanguageItem('ES', '🇪🇸', false),
+                            _buildLanguageOption('EN', '🇬🇧', true),
+                            Container(width: 1, height: 16, color: Colors.grey.shade300),
+                            _buildLanguageOption('ES', '🇪🇸', false),
                           ],
                         ),
                       )
@@ -191,9 +178,7 @@ class SideMenu extends StatelessWidget {
     );
   }
 
-  // ------------------------------------------------
-  // WIDGETS AUXILIARES
-  // ------------------------------------------------
+  // --- Widgets Auxiliares ---
 
   Widget _buildMenuItem({
     required IconData icon,
@@ -206,10 +191,10 @@ class SideMenu extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 4),
+      margin: const EdgeInsets.only(bottom: 4), 
       decoration: BoxDecoration(
         color: isSelected ? activeBg : Colors.transparent,
-        borderRadius: BorderRadius.circular(30), // Bordes muy redondeados (Pill shape)
+        borderRadius: BorderRadius.circular(50), 
       ),
       child: ListTile(
         leading: Icon(
@@ -221,27 +206,26 @@ class SideMenu extends StatelessWidget {
           text,
           style: textStyle.copyWith(
             color: isSelected ? activeColor : textColor,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
         onTap: onTap,
         dense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(50),
         ),
       ),
     );
   }
 
-  Widget _buildLanguageItem(String code, String flag, bool isSelected) {
+  Widget _buildLanguageOption(String code, String flag, bool isSelected) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
-          // Checkmark solo si está seleccionado
           if (isSelected) ...[
-            const Icon(Icons.check, size: 14, color: Colors.black87),
+            const Icon(Icons.check, size: 12, color: Colors.black),
             const SizedBox(width: 4),
           ],
           Text(

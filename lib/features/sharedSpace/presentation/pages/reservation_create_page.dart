@@ -1,5 +1,7 @@
 import 'package:eduspace_flutter_app/features/sharedSpace/data/reservation_repository_impl.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/data/reservation_service.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/data/shared_area_service.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/presentation/blocs/shared_area_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/presentation/blocs/reservation_cubit.dart';
@@ -7,24 +9,31 @@ import 'package:eduspace_flutter_app/features/sharedSpace/presentation/widgets/r
 
 class ReservationCreatePage extends StatelessWidget {
   final String teacherId;
-  final String areaId;
 
   const ReservationCreatePage({
     Key? key,
     required this.teacherId,
-    required this.areaId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     
-    return BlocProvider(
-      create: (context) => ReservationCubit(
-        repository: ReservationRepositoryImpl(
-          service: ReservationService(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ReservationCubit(
+            repository: ReservationRepositoryImpl(
+              service: ReservationService(),
+            ),
+          ),
         ),
-      ),
+        BlocProvider(
+          create: (context) => SharedAreaCubit(
+            service: SharedAreaService(),
+          ),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: colorScheme.surface,
         appBar: AppBar(
@@ -57,7 +66,6 @@ class ReservationCreatePage extends StatelessWidget {
         ),
         body: ReservationForm(
           teacherId: teacherId,
-          areaId: areaId,
         ),
       ),
     );

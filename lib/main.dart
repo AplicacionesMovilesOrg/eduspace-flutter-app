@@ -22,7 +22,6 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const ReservationCreatePage(
         teacherId: "1", 
-        areaId: "1",    
       ),
     );
   }

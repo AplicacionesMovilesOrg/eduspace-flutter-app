@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eduspace_flutter_app/core/ui/theme.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/presentation/blocs/reservation_cubit.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/presentation/blocs/shared_area_cubit.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/shared_area.dart';
 import 'package:intl/intl.dart';
 
 class ReservationForm extends StatefulWidget {
   final String teacherId;
-  final String areaId;
 
   const ReservationForm({
     Key? key,
     required this.teacherId,
-    required this.areaId,
   }) : super(key: key);
 
   @override
@@ -22,13 +22,17 @@ class _ReservationFormState extends State<ReservationForm> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   
-  DateTime _startDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
-  DateTime _endDate = DateTime.now();
-  TimeOfDay _endTime = TimeOfDay(
-    hour: (TimeOfDay.now().hour + 1) % 24, 
-    minute: TimeOfDay.now().minute
-  );
+  double _durationHours = 1.0; // Duración en horas (0.5, 1, 1.5, 2)
+  SharedArea? _selectedArea;
+
+  @override
+  void initState() {
+    super.initState();
+    // Cargar las áreas al iniciar
+    context.read<SharedAreaCubit>().loadSharedAreas();
+  }
 
   @override
   void dispose() {
@@ -40,10 +44,16 @@ class _ReservationFormState extends State<ReservationForm> {
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);
   }
 
-  Future<void> _selectDate(BuildContext context, bool isStart) async {
+  DateTime _calculateEndTime() {
+    final start = _combineDateAndTime(_selectedDate, _startTime);
+    final durationMinutes = (_durationHours * 60).round();
+    return start.add(Duration(minutes: durationMinutes));
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStart ? _startDate : _endDate,
+      initialDate: _selectedDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) {
@@ -63,19 +73,15 @@ class _ReservationFormState extends State<ReservationForm> {
     
     if (picked != null) {
       setState(() {
-        if (isStart) {
-          _startDate = picked;
-        } else {
-          _endDate = picked;
-        }
+        _selectedDate = picked;
       });
     }
   }
 
-  Future<void> _selectTime(BuildContext context, bool isStart) async {
+  Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: isStart ? _startTime : _endTime,
+      initialTime: _startTime,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -93,28 +99,24 @@ class _ReservationFormState extends State<ReservationForm> {
     
     if (picked != null) {
       setState(() {
-        if (isStart) {
-          _startTime = picked;
-        } else {
-          _endTime = picked;
-        }
+        _startTime = picked;
       });
     }
   }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      final start = _combineDateAndTime(_startDate, _startTime);
-      final end = _combineDateAndTime(_endDate, _endTime);
-
-      if (end.isBefore(start) || end.isAtSameMomentAs(start)) {
-        _showErrorSnackBar('End time must be after start time');
+      if (_selectedArea == null) {
+        _showErrorSnackBar('Please select an area');
         return;
       }
 
+      final start = _combineDateAndTime(_selectedDate, _startTime);
+      final end = _calculateEndTime();
+
       context.read<ReservationCubit>().createReservation(
         teacherId: widget.teacherId,
-        areaId: widget.areaId,
+        areaId: _selectedArea!.id,
         title: _titleController.text.trim(),
         start: start,
         end: end,
@@ -180,7 +182,7 @@ class _ReservationFormState extends State<ReservationForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Header Card with Brand Gradient
+                // Header Card
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -210,7 +212,7 @@ class _ReservationFormState extends State<ReservationForm> {
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'Create New Reservation',
+                        'Book a Space',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -219,7 +221,7 @@ class _ReservationFormState extends State<ReservationForm> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Fill in the details below',
+                        'Fill in the details to reserve a shared area',
                         style: TextStyle(
                           fontSize: 14,
                           color: MaterialTheme.white.withOpacity(0.9),
@@ -230,7 +232,9 @@ class _ReservationFormState extends State<ReservationForm> {
                 ),
                 const SizedBox(height: 32),
 
-                // Title Input
+                // Activity Title
+                _buildSectionTitle('Activity Title'),
+                const SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
                     color: MaterialTheme.white,
@@ -247,36 +251,21 @@ class _ReservationFormState extends State<ReservationForm> {
                     controller: _titleController,
                     style: const TextStyle(fontSize: 16, color: MaterialTheme.black1),
                     decoration: InputDecoration(
-                      labelText: 'Reservation Title',
-                      hintText: 'Enter a descriptive title',
-                      prefixIcon: Container(
-                        margin: const EdgeInsets.all(12),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: MaterialTheme.brandPrimary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(
-                          Icons.title,
-                          color: MaterialTheme.brandPrimary,
-                          size: 20,
-                        ),
-                      ),
+                      hintText: 'Enter activity name',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
                       fillColor: MaterialTheme.white,
-                      labelStyle: const TextStyle(color: MaterialTheme.gray2),
-                      floatingLabelStyle: const TextStyle(
-                        color: MaterialTheme.brandPrimary,
-                        fontWeight: FontWeight.w600,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a title';
+                        return 'Please enter an activity title';
                       }
                       if (value.trim().length < 3) {
                         return 'Title must be at least 3 characters';
@@ -285,45 +274,146 @@ class _ReservationFormState extends State<ReservationForm> {
                     },
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
-                // Start Time Section
-                _buildDateTimeSection(
-                  context: context,
-                  title: 'Start Time',
-                  icon: Icons.play_circle_outline,
-                  date: _startDate,
-                  time: _startTime,
-                  isStart: true,
+                // Select Area
+                _buildSectionTitle('Select Area'),
+                const SizedBox(height: 12),
+                BlocBuilder<SharedAreaCubit, SharedAreaState>(
+                  builder: (context, state) {
+                    if (state is SharedAreaLoading) {
+                      return Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: MaterialTheme.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+
+                    if (state is SharedAreaError) {
+                      return Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: MaterialTheme.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.error_outline, color: MaterialTheme.stateError),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Error loading areas',
+                              style: TextStyle(color: MaterialTheme.stateError),
+                            ),
+                            const SizedBox(height: 8),
+                            TextButton(
+                              onPressed: () => context.read<SharedAreaCubit>().loadSharedAreas(),
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (state is SharedAreaLoaded) {
+                      if (state.areas.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: MaterialTheme.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            'No areas available',
+                            style: TextStyle(color: MaterialTheme.gray2),
+                          ),
+                        );
+                      }
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: MaterialTheme.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: MaterialTheme.black1.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: DropdownButtonFormField<SharedArea>(
+                          value: _selectedArea,
+                          decoration: InputDecoration(
+                            hintText: 'Select an area',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: MaterialTheme.white,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 16,
+                            ),
+                          ),
+                          items: state.areas.map((area) {
+                            return DropdownMenuItem<SharedArea>(
+                              value: area,
+                              child: Text(area.name),
+                            );
+                          }).toList(),
+                          onChanged: (SharedArea? value) {
+                            setState(() {
+                              _selectedArea = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select an area';
+                            }
+                            return null;
+                          },
+                        ),
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
                 ),
                 const SizedBox(height: 24),
 
-                // Duration Badge
-                Center(
+                // Date
+                _buildSectionTitle('Date'),
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: () => _selectDate(context),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: MaterialTheme.brandPrimary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      color: MaterialTheme.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: MaterialTheme.black1.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
-                          Icons.schedule,
-                          size: 16,
-                          color: MaterialTheme.brandPrimary,
-                        ),
-                        const SizedBox(width: 8),
+                        const Icon(Icons.calendar_today, color: MaterialTheme.brandPrimary),
+                        const SizedBox(width: 12),
                         Text(
-                          _calculateDuration(),
+                          DateFormat('yyyy-MM-dd').format(_selectedDate),
                           style: const TextStyle(
-                            color: MaterialTheme.brandPrimary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
+                            fontSize: 16,
+                            color: MaterialTheme.black1,
                           ),
                         ),
                       ],
@@ -332,14 +422,169 @@ class _ReservationFormState extends State<ReservationForm> {
                 ),
                 const SizedBox(height: 24),
 
-                // End Time Section
-                _buildDateTimeSection(
-                  context: context,
-                  title: 'End Time',
-                  icon: Icons.stop_circle_outlined,
-                  date: _endDate,
-                  time: _endTime,
-                  isStart: false,
+                // Info Banner
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: MaterialTheme.brandPrimary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: MaterialTheme.brandPrimary.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.info_outline,
+                        color: MaterialTheme.brandPrimary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Reservations are available from 7:00 AM to 8:00 PM (max 2 hours)',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: MaterialTheme.brandPrimary.withOpacity(0.9),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Start Time
+                _buildSectionTitle('Start Time'),
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: () => _selectTime(context),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: MaterialTheme.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: MaterialTheme.black1.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.access_time, color: MaterialTheme.brandPrimary),
+                        const SizedBox(width: 12),
+                        Text(
+                          _startTime.format(context),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: MaterialTheme.black1,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Duration Selector
+                _buildSectionTitle('Duration (max 2hrs)'),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: MaterialTheme.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: MaterialTheme.black1.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Duration',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: MaterialTheme.black1,
+                            ),
+                          ),
+                          Text(
+                            _formatDuration(_durationHours),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: MaterialTheme.brandPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Slider(
+                        value: _durationHours,
+                        min: 0.5,
+                        max: 2.0,
+                        divisions: 3,
+                        activeColor: MaterialTheme.brandPrimary,
+                        inactiveColor: MaterialTheme.brandPrimary.withOpacity(0.2),
+                        label: _formatDuration(_durationHours),
+                        onChanged: (value) {
+                          setState(() {
+                            _durationHours = value;
+                          });
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text('0.5h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
+                          Text('1h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
+                          Text('1.5h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
+                          Text('2h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // End Time Display
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: MaterialTheme.brandPrimary.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'End Time',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: MaterialTheme.gray2,
+                        ),
+                      ),
+                      Text(
+                        TimeOfDay.fromDateTime(_calculateEndTime()).format(context),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: MaterialTheme.brandPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 40),
 
@@ -409,143 +654,22 @@ class _ReservationFormState extends State<ReservationForm> {
     );
   }
 
-  Widget _buildDateTimeSection({
-    required BuildContext context,
-    required String title,
-    required IconData icon,
-    required DateTime date,
-    required TimeOfDay time,
-    required bool isStart,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: MaterialTheme.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: MaterialTheme.black1.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: MaterialTheme.brandPrimary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  icon,
-                  color: MaterialTheme.brandPrimary,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: MaterialTheme.black1,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _buildDateTimeButton(
-                  context: context,
-                  icon: Icons.calendar_today,
-                  label: DateFormat('MMM dd, yyyy').format(date),
-                  onPressed: () => _selectDate(context, isStart),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildDateTimeButton(
-                  context: context,
-                  icon: Icons.access_time,
-                  label: time.format(context),
-                  onPressed: () => _selectTime(context, isStart),
-                ),
-              ),
-            ],
-          ),
-        ],
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: MaterialTheme.black1,
       ),
     );
   }
 
-  Widget _buildDateTimeButton({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-        decoration: BoxDecoration(
-          color: MaterialTheme.gray5,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: MaterialTheme.gray4,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: MaterialTheme.brandPrimary,
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: MaterialTheme.gray2,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _calculateDuration() {
-    final start = _combineDateAndTime(_startDate, _startTime);
-    final end = _combineDateAndTime(_endDate, _endTime);
-    final duration = end.difference(start);
-
-    if (duration.isNegative) return 'Invalid duration';
-
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-
-    if (hours == 0) {
-      return '$minutes min${minutes != 1 ? 's' : ''}';
-    } else if (minutes == 0) {
-      return '$hours hour${hours != 1 ? 's' : ''}';
-    } else {
-      return '$hours hr${hours != 1 ? 's' : ''} $minutes min';
-    }
+  String _formatDuration(double hours) {
+    if (hours == 0.5) return '30 minutes';
+    if (hours == 1.0) return '1 hour';
+    if (hours == 1.5) return '1.5 hours';
+    if (hours == 2.0) return '2 hours';
+    return '${hours}h';
   }
 }

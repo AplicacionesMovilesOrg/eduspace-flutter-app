@@ -3,5 +3,10 @@ static final String baseUrl="https://eduspace-platform-production-4062.up.railwa
  static final String reservationsEndpoint = "/reservations";
   
   static String createReservationPath(String teacherId, String areaId) {
-    return "/teachers/$teacherId/areas/$areaId/reservations";
-  }}
+    return "/teachers/$teacherId/areas/$areaId/reservations"; }
+     static final String sharedAreasEndpoint = "/shared-area";
+  
+  static String getSharedAreaByIdPath(String areaId) {
+    return "/shared-area/$areaId";
+  }
+    }

@@ -11,6 +11,7 @@ import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/login_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/pages/login_page.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/pages/welcome_page.dart';
+import 'package:eduspace_flutter_app/presentation/widgets/side_menu.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
+import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({super.key});
@@ -118,7 +121,10 @@ class SideMenu extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                    context.read<AuthBloc>().add(LoggedOut());
+                  },
                 ),
               ],
             ),

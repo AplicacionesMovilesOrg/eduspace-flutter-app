@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
-import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state.dart';
+import 'package:eduspace_flutter_app/presentation/widgets/side_menu.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -23,6 +23,7 @@ class WelcomePage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: Colors.white,
+          drawer: const SideMenu(),
           appBar: AppBar(
             title: const Text(
               'EduSpace Teacher',
@@ -32,7 +33,6 @@ class WelcomePage extends StatelessWidget {
             backgroundColor: eduBlue,
             foregroundColor: Colors.white,
             elevation: 0,
-            automaticallyImplyLeading: false,
           ),
           body: Column(
             children: [
@@ -104,27 +104,6 @@ class WelcomePage extends StatelessWidget {
                         style: TextStyle(color: Colors.grey.shade500),
                       ),
                     ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      context.read<AuthBloc>().add(LoggedOut());
-                    },
-                    icon: const Icon(Icons.logout_rounded),
-                    label: const Text('Cerrar Sesión'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.redAccent,
-                      side: const BorderSide(color: Colors.redAccent),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
                   ),
                 ),
               ),

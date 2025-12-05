@@ -1,5 +1,4 @@
 import 'package:eduspace_flutter_app/core/ui/theme.dart';
-import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/reservation_create_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,7 +10,6 @@ import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/login_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/pages/login_page.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/pages/welcome_page.dart';
-import 'package:eduspace_flutter_app/presentation/widgets/side_menu.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

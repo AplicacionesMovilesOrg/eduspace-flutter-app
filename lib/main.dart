@@ -1,3 +1,5 @@
+import 'package:eduspace_flutter_app/core/ui/theme.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/reservation_create_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -28,14 +30,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final materialTheme = MaterialTheme(textTheme);
+
     return BlocProvider.value(
       value: authBloc,
       child: MaterialApp(
         title: 'Eduspace Teacher',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: materialTheme.light(),
+        darkTheme: materialTheme.dark(),
+        themeMode: ThemeMode.light,
+        debugShowCheckedModeBanner: false,
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthLoading) {

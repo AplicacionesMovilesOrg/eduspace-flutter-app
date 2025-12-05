@@ -49,7 +49,7 @@ class SideMenu extends StatelessWidget {
           const SizedBox(height: 16),
 
           // ------------------------------------------------
-          // 2. BODY (Nuevas Opciones del Menú)
+          // 2. BODY (Opciones del Menú)
           // ------------------------------------------------
           Expanded(
             child: ListView(
@@ -69,7 +69,7 @@ class SideMenu extends StatelessWidget {
                 
                 // Opción 2: Reservations
                 _buildMenuItem(
-                  icon: Icons.edit_document, // Icono de lista con lápiz
+                  icon: Icons.edit_document, 
                   text: 'Reservations',
                   isSelected: false,
                   activeColor: primaryBlue,
@@ -83,7 +83,7 @@ class SideMenu extends StatelessWidget {
 
                 // Opción 3: Breakdown Reports
                 _buildMenuItem(
-                  icon: Icons.campaign_outlined, // Icono de megáfono
+                  icon: Icons.campaign_outlined, 
                   text: 'Breakdown Reports',
                   isSelected: false,
                   activeColor: primaryBlue,
@@ -99,7 +99,7 @@ class SideMenu extends StatelessWidget {
           ),
 
           // ------------------------------------------------
-          // 3. FOOTER (Logout y Lenguaje - Se mantienen igual)
+          // 3. FOOTER (Solo Logout)
           // ------------------------------------------------
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
@@ -120,56 +120,6 @@ class SideMenu extends StatelessWidget {
                   ),
                   onTap: () {},
                 ),
-                
-                const SizedBox(height: 10),
-
-                // Selector de Idioma (Caja Gris Redondeada)
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0F0F5), 
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Texto "Language"
-                      Row(
-                        children: [
-                          const SizedBox(width: 8),
-                          Icon(Icons.language, color: Colors.blueGrey[700], size: 22),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Language', 
-                            style: menuTextStyle.copyWith(
-                              color: Colors.blueGrey[800], 
-                              fontSize: 14
-                            ),
-                          ),
-                        ],
-                      ),
-                      
-                      // Toggle Switch
-                      Container(
-                        height: 36,
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildLanguageOption('EN', '🇬🇧', true),
-                            Container(width: 1, height: 16, color: Colors.grey.shade300),
-                            _buildLanguageOption('ES', '🇪🇸', false),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
               ],
             ),
           ),
@@ -215,28 +165,6 @@ class SideMenu extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLanguageOption(String code, String flag, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        children: [
-          if (isSelected) ...[
-            const Icon(Icons.check, size: 12, color: Colors.black),
-            const SizedBox(width: 4),
-          ],
-          Text(
-            '$code $flag',
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-        ],
       ),
     );
   }

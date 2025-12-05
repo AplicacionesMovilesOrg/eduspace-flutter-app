@@ -1,3 +1,4 @@
+import 'package:eduspace_flutter_app/core/services/storage_service.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/data/reservation_repository_impl.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/data/reservation_service.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/data/shared_area_service.dart';
@@ -6,54 +7,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/presentation/blocs/reservation_cubit.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/presentation/widgets/reservation_form.dart';
+import 'package:eduspace_flutter_app/presentation/widgets/side_menu.dart';
 
 class ReservationCreatePage extends StatelessWidget {
   final String teacherId;
 
-  const ReservationCreatePage({
-    Key? key,
-    required this.teacherId,
-  }) : super(key: key);
+  const ReservationCreatePage({super.key, required this.teacherId});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => ReservationCubit(
             repository: ReservationRepositoryImpl(
-              service: ReservationService(),
+              service: ReservationService(storageService: StorageService()),
             ),
           ),
         ),
         BlocProvider(
           create: (context) => SharedAreaCubit(
-            service: SharedAreaService(),
+            service: SharedAreaService(storageService: StorageService()),
           ),
         ),
       ],
       child: Scaffold(
         backgroundColor: colorScheme.surface,
+        drawer: const SideMenu(currentPage: 'reservations'),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainer,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                Icons.arrow_back_ios_new,
-                size: 16,
-                color: colorScheme.onSurface,
-              ),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
           title: Text(
             'New Reservation',
             style: TextStyle(
@@ -64,9 +49,7 @@ class ReservationCreatePage extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: ReservationForm(
-          teacherId: teacherId,
-        ),
+        body: ReservationForm(teacherId: teacherId),
       ),
     );
   }

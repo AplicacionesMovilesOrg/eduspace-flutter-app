@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/Reservation.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/reservation.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/reservation_repository.dart';
 
 abstract class ReservationState {}

@@ -1,4 +1,4 @@
-import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/Reservation.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/reservation.dart';
 
 abstract class ReservationRepository {
   Future<Reservation> createReservation({

@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
   void _handleLoginFailure(BuildContext context, String? message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message ?? 'Error de autenticación'),
+        content: Text(message ?? 'Authentication error'),
         backgroundColor: Colors.redAccent,
         behavior: SnackBarBehavior.floating,
       ),
@@ -93,10 +93,7 @@ class LoginPage extends StatelessWidget {
                 Text(
                   '© 2025 EduSpace Platform',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade400,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                 ),
               ],
             ),
@@ -114,17 +111,19 @@ class _UsernameField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (value) => context.read<LoginBloc>().add(
-        OnUsernameChanged(username: value),
-      ),
+      onChanged: (value) =>
+          context.read<LoginBloc>().add(OnUsernameChanged(username: value)),
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
       style: const TextStyle(fontWeight: FontWeight.w500),
       decoration: InputDecoration(
-        labelText: 'Usuario',
-        hintText: 'Ej. jperez',
+        labelText: 'Username',
+        hintText: 'e.g. jperez',
         prefixIcon: Icon(Icons.person_outline, color: Colors.grey.shade500),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
@@ -153,18 +152,17 @@ class _PasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) =>
-        previous.isPasswordVisible != current.isPasswordVisible,
+          previous.isPasswordVisible != current.isPasswordVisible,
       builder: (context, state) {
         return TextField(
-          onChanged: (value) => context.read<LoginBloc>().add(
-            OnPasswordChanged(password: value),
-          ),
+          onChanged: (value) =>
+              context.read<LoginBloc>().add(OnPasswordChanged(password: value)),
           obscureText: !state.isPasswordVisible,
           textInputAction: TextInputAction.done,
           onSubmitted: (_) => context.read<LoginBloc>().add(const Login()),
           style: const TextStyle(fontWeight: FontWeight.w500),
           decoration: InputDecoration(
-            labelText: 'Contraseña',
+            labelText: 'Password',
             hintText: '••••••',
             prefixIcon: Icon(Icons.lock_outline, color: Colors.grey.shade500),
             suffixIcon: IconButton(
@@ -178,7 +176,10 @@ class _PasswordField extends StatelessWidget {
                 const TogglePasswordVisibility(),
               ),
             ),
-            contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 18,
+              horizontal: 16,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
@@ -211,9 +212,7 @@ class _LoginButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         if (state.status == Status.loading) {
-          return Center(
-            child: CircularProgressIndicator(color: btnColor),
-          );
+          return Center(child: CircularProgressIndicator(color: btnColor));
         }
         return SizedBox(
           height: 56,
@@ -228,7 +227,7 @@ class _LoginButton extends StatelessWidget {
               ),
             ),
             child: const Text(
-              'INGRESAR',
+              'LOGIN',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

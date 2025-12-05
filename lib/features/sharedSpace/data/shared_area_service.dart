@@ -1,20 +1,32 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:eduspace_flutter_app/core/constants/api_constants.dart';
+import 'package:eduspace_flutter_app/core/services/storage_service.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/domain/models/shared_area.dart';
 import 'package:http/http.dart' as http;
 
 class SharedAreaService {
+  final StorageService _storageService;
+
+  SharedAreaService({required StorageService storageService})
+    : _storageService = storageService;
+
   Future<List<SharedArea>> getAllSharedAreas() async {
     try {
+      final token = await _storageService.getToken();
+      if (token == null) {
+        throw Exception('No authentication token found');
+      }
+
       final Uri uri = Uri.parse(
-        ApiConstants.baseUrl + ApiConstants.sharedAreasEndpoint
+        ApiConstants.baseUrl + ApiConstants.sharedAreasEndpoint,
       );
-      
+
       final response = await http.get(
         uri,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
         },
       );
 
@@ -43,14 +55,20 @@ class SharedAreaService {
 
   Future<SharedArea> getSharedAreaById(String id) async {
     try {
+      final token = await _storageService.getToken();
+      if (token == null) {
+        throw Exception('No authentication token found');
+      }
+
       final Uri uri = Uri.parse(
-        ApiConstants.baseUrl + ApiConstants.getSharedAreaByIdPath(id)
+        ApiConstants.baseUrl + ApiConstants.getSharedAreaByIdPath(id),
       );
-      
+
       final response = await http.get(
         uri,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
         },
       );
 

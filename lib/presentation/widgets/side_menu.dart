@@ -2,40 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event.dart';
+import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/reservation_create_page.dart';
+import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/my_reservations_page.dart';
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({super.key});
+  final String currentPage;
+
+  const SideMenu({super.key, this.currentPage = 'home'});
 
   @override
   Widget build(BuildContext context) {
-    // Definimos los colores exactos del diseño "Eduspace"
-    final Color primaryBlue = const Color(0xFF4285F4); // Azul principal
-    final Color selectedBg = const Color(0xFFE3F2FD);  // Fondo item seleccionado
-    final Color logoutRed = const Color(0xFFD32F2F);   // Rojo logout
-    final Color textDark = const Color(0xFF1F1F1F);    // Texto general
-    
-    // Estilo de texto base
+    // Colores del tema
+    final Color primaryBlue = const Color(0xFF4285F4);
+    final Color selectedBg = const Color(0xFFE3F2FD);
+    final Color logoutRed = const Color(0xFFD32F2F);
+    final Color textDark = const Color(0xFF1F1F1F);
+
     final TextStyle menuTextStyle = const TextStyle(
       fontSize: 15,
       fontWeight: FontWeight.w500,
     );
 
     return Drawer(
-      backgroundColor: Colors.white,
-      // Quitamos el borde redondeado del drawer para que sea recto
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.zero,
-      ),
+      backgroundColor: const Color(0xFFF0F8FF),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         children: [
-          // ------------------------------------------------
-          // 1. HEADER (Título Azul)
-          // ------------------------------------------------
+          // Header
           Container(
             width: double.infinity,
-            height: 120, 
+            height: 120,
             color: primaryBlue,
-            alignment: Alignment.center, 
+            alignment: Alignment.center,
             child: SafeArea(
               bottom: false,
               child: const Text(
@@ -51,66 +50,95 @@ class SideMenu extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // ------------------------------------------------
-          // 2. BODY (Opciones del Menú)
-          // ------------------------------------------------
+          // Body
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
-                // Opción 1: Home (Seleccionada por defecto)
                 _buildMenuItem(
-                  icon: Icons.home_filled, 
+                  icon: Icons.home_filled,
                   text: 'Home',
-                  isSelected: true, // Item activo (azul)
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
-                  textStyle: menuTextStyle,
-                  onTap: () => Navigator.pop(context),
-                ),
-                
-                // Opción 2: Reservations
-                _buildMenuItem(
-                  icon: Icons.edit_document, 
-                  text: 'Reservations',
-                  isSelected: false,
+                  isSelected: currentPage == 'home',
                   activeColor: primaryBlue,
                   activeBg: selectedBg,
                   textColor: textDark,
                   textStyle: menuTextStyle,
                   onTap: () {
-                    // Navegación a Reservas
+                    if (currentPage != 'home') {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    } else {
+                      Navigator.pop(context);
+                    }
                   },
                 ),
 
-                // Opción 3: Breakdown Reports
                 _buildMenuItem(
-                  icon: Icons.campaign_outlined, 
-                  text: 'Breakdown Reports',
-                  isSelected: false,
+                  icon: Icons.edit,
+                  text: 'Reservations',
+                  isSelected: currentPage == 'reservations',
                   activeColor: primaryBlue,
                   activeBg: selectedBg,
                   textColor: textDark,
                   textStyle: menuTextStyle,
                   onTap: () {
-                    // Navegación a Reportes
+                    final authState = context.read<AuthBloc>().state;
+                    if (authState is Authenticated) {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReservationCreatePage(
+                            teacherId: authState.user.id,
+                          ),
+                        ),
+                      );
+                    }
                   },
+                ),
+
+                _buildMenuItem(
+                  icon: Icons.calendar_today,
+                  text: 'My Reservations',
+                  isSelected: currentPage == 'my_reservations',
+                  activeColor: primaryBlue,
+                  activeBg: selectedBg,
+                  textColor: textDark,
+                  textStyle: menuTextStyle,
+                  onTap: () {
+                    final authState = context.read<AuthBloc>().state;
+                    if (authState is Authenticated) {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MyReservationsPage(teacherId: authState.user.id),
+                        ),
+                      );
+                    }
+                  },
+                ),
+
+                _buildMenuItem(
+                  icon: Icons.campaign_outlined,
+                  text: 'Breakdown Reports',
+                  isSelected: currentPage == 'breakdown_reports',
+                  activeColor: primaryBlue,
+                  activeBg: selectedBg,
+                  textColor: textDark,
+                  textStyle: menuTextStyle,
+                  onTap: () {},
                 ),
               ],
             ),
           ),
 
-          // ------------------------------------------------
-          // 3. FOOTER (Solo Logout)
-          // ------------------------------------------------
+          // Footer
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
             child: Column(
               children: [
                 const Divider(height: 30, thickness: 1),
-                
-                // Botón Logout (Rojo)
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(Icons.logout, color: logoutRed),
@@ -135,7 +163,6 @@ class SideMenu extends StatelessWidget {
   }
 
   // --- Widgets Auxiliares ---
-
   Widget _buildMenuItem({
     required IconData icon,
     required String text,
@@ -147,10 +174,10 @@ class SideMenu extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 4), 
+      margin: const EdgeInsets.only(bottom: 4),
       decoration: BoxDecoration(
         color: isSelected ? activeBg : Colors.transparent,
-        borderRadius: BorderRadius.circular(50), 
+        borderRadius: BorderRadius.circular(50),
       ),
       child: ListTile(
         leading: Icon(
@@ -168,9 +195,7 @@ class SideMenu extends StatelessWidget {
         onTap: onTap,
         dense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       ),
     );
   }

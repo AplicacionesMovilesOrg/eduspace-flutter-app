@@ -11,7 +11,9 @@ class AuthService {
 
   Future<User> login(String username, String password) async {
     try {
-      final uri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.signInEndpoint}');
+      final uri = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.signInEndpoint}',
+      );
 
       final response = await _client.post(
         uri,

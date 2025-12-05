@@ -5,8 +5,8 @@ class MaterialTheme {
 
   const MaterialTheme(this.textTheme);
 
-  static const Color brandPrimary = Color(0xFF0CC0DF); 
-  static const Color brandSecondary = Color(0xFFFCDE5B); 
+  static const Color brandPrimary = Color(0xFF4285F4);
+  static const Color brandSecondary = Color(0xFFFCDE5B);
 
   static const Color stateInfo = Color(0xFF064C5B);
   static const Color stateSuccess = Color(0xFF0A9F19);
@@ -24,8 +24,8 @@ class MaterialTheme {
   static const Color gray4 = Color(0xFFBDBDBD);
   static const Color gray5 = Color(0xFFE0E0E0);
 
-  static const Color gradientStart = Color(0xFF0CC0DF); 
-  static const Color gradientEnd = Color(0xFF0A9F19); 
+  static const Color gradientStart = Color(0xFF0CC0DF);
+  static const Color gradientEnd = Color(0xFF4285F4);
 
   static ColorScheme lightScheme() {
     return const ColorScheme(
@@ -33,17 +33,17 @@ class MaterialTheme {
       primary: brandPrimary, // #0CC0DF
       surfaceTint: brandPrimary,
       onPrimary: white,
-      primaryContainer: Color(0xFFB8F3FF), 
+      primaryContainer: Color(0xFFB8F3FF),
       onPrimaryContainer: stateInfo,
-      secondary: brandSecondary, 
+      secondary: brandSecondary,
       onSecondary: black1,
-      secondaryContainer: Color(0xFFFFF4C4), 
+      secondaryContainer: Color(0xFFFFF4C4),
       onSecondaryContainer: stateWarning,
-      tertiary: stateInfo, 
+      tertiary: stateInfo,
       onTertiary: white,
       tertiaryContainer: Color(0xFFB8E5F0),
       onTertiaryContainer: stateInfo,
-      error: stateError, 
+      error: stateError,
       onError: white,
       errorContainer: Color(0xFFFFDAD6),
       onErrorContainer: Color(0xFF8C0000),
@@ -85,12 +85,12 @@ class MaterialTheme {
   static ColorScheme darkScheme() {
     return const ColorScheme(
       brightness: Brightness.dark,
-      primary: Color(0xFF7DE3FF), 
+      primary: Color(0xFF7DE3FF),
       surfaceTint: Color(0xFF7DE3FF),
       onPrimary: stateInfo,
       primaryContainer: Color(0xFF087A8F),
       onPrimaryContainer: Color(0xFFB8F3FF),
-      secondary: Color(0xFFFFEB9A), 
+      secondary: Color(0xFFFFEB9A),
       onSecondary: stateWarning,
       secondaryContainer: Color(0xFF5C4A00),
       onSecondaryContainer: Color(0xFFFFF4C4),
@@ -138,17 +138,16 @@ class MaterialTheme {
   }
 
   ThemeData theme(ColorScheme colorScheme) => ThemeData(
-        useMaterial3: true,
-        brightness: colorScheme.brightness,
-        colorScheme: colorScheme,
-        textTheme: textTheme.apply(
-          bodyColor: colorScheme.onSurface,
-          displayColor: colorScheme.onSurface,
-        ),
-        scaffoldBackgroundColor: colorScheme.surface,
-        canvasColor: colorScheme.surface,
-      );
-
+    useMaterial3: true,
+    brightness: colorScheme.brightness,
+    colorScheme: colorScheme,
+    textTheme: textTheme.apply(
+      bodyColor: colorScheme.onSurface,
+      displayColor: colorScheme.onSurface,
+    ),
+    scaffoldBackgroundColor: colorScheme.surface,
+    canvasColor: colorScheme.surface,
+  );
 
   static LinearGradient createBrandGradient({
     AlignmentGeometry begin = Alignment.topCenter,
@@ -157,10 +156,7 @@ class MaterialTheme {
     return LinearGradient(
       begin: begin,
       end: end,
-      colors: [
-        gradientStart, 
-        gradientEnd, 
-      ],
+      colors: [gradientStart, gradientEnd],
     );
   }
 
@@ -173,7 +169,7 @@ class MaterialTheme {
       begin: begin,
       end: end,
       colors: [
-        gradientStart.withOpacity(opacity),
+        gradientStart.withValues(alpha: opacity),
         white,
       ],
     );

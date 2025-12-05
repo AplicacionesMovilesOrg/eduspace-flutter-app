@@ -9,7 +9,10 @@ import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/login_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/pages/login_page.dart';
-import 'package:eduspace_flutter_app/features/auth/presentation/pages/welcome_page.dart';
+import 'package:eduspace_flutter_app/features/auth/presentation/pages/home_page.dart';
+import 'package:eduspace_flutter_app/features/classroom/data/classroom_service.dart';
+import 'package:eduspace_flutter_app/features/classroom/data/teacher_profile_service.dart';
+import 'package:eduspace_flutter_app/features/classroom/presentation/blocs/classroom_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,12 +47,20 @@ class MainApp extends StatelessWidget {
           builder: (context, state) {
             if (state is AuthLoading) {
               return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                body: Center(child: CircularProgressIndicator()),
               );
             } else if (state is Authenticated) {
-              return const WelcomePage();
+              return BlocProvider(
+                create: (context) => ClassroomCubit(
+                  classroomService: ClassroomService(
+                    storageService: StorageService(),
+                  ),
+                  teacherProfileService: TeacherProfileService(
+                    storageService: StorageService(),
+                  ),
+                ),
+                child: const HomePage(),
+              );
             } else {
               return BlocProvider(
                 create: (context) => LoginBloc(service: AuthService()),

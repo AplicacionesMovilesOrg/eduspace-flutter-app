@@ -11,6 +11,10 @@ class ApiConstants {
     return "/teachers/$teacherId/areas/$areaId/reservations";
   }
 
+  static String getTeacherReservationsPath(String teacherId) {
+    return "/teachers/$teacherId/reservations";
+  }
+
   static String getSharedAreaByIdPath(String areaId) {
     return "/shared-area/$areaId";
   }

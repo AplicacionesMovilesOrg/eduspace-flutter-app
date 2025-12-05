@@ -9,10 +9,7 @@ import 'package:intl/intl.dart';
 class ReservationForm extends StatefulWidget {
   final String teacherId;
 
-  const ReservationForm({
-    Key? key,
-    required this.teacherId,
-  }) : super(key: key);
+  const ReservationForm({super.key, required this.teacherId});
 
   @override
   State<ReservationForm> createState() => _ReservationFormState();
@@ -21,16 +18,15 @@ class ReservationForm extends StatefulWidget {
 class _ReservationFormState extends State<ReservationForm> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  
+
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _startTime = TimeOfDay.now();
-  double _durationHours = 1.0; // Duración en horas (0.5, 1, 1.5, 2)
+  double _durationHours = 1.0;
   SharedArea? _selectedArea;
 
   @override
   void initState() {
     super.initState();
-    // Cargar las áreas al iniciar
     context.read<SharedAreaCubit>().loadSharedAreas();
   }
 
@@ -70,7 +66,7 @@ class _ReservationFormState extends State<ReservationForm> {
         );
       },
     );
-    
+
     if (picked != null) {
       setState(() {
         _selectedDate = picked;
@@ -96,7 +92,7 @@ class _ReservationFormState extends State<ReservationForm> {
         );
       },
     );
-    
+
     if (picked != null) {
       setState(() {
         _startTime = picked;
@@ -153,9 +149,7 @@ class _ReservationFormState extends State<ReservationForm> {
                 children: const [
                   Icon(Icons.check_circle_outline, color: MaterialTheme.white),
                   SizedBox(width: 12),
-                  Expanded(
-                    child: Text('Reservation created successfully!'),
-                  ),
+                  Expanded(child: Text('Reservation created successfully!')),
                 ],
               ),
               backgroundColor: MaterialTheme.stateSuccess,
@@ -190,7 +184,9 @@ class _ReservationFormState extends State<ReservationForm> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: MaterialTheme.brandPrimary.withOpacity(0.3),
+                        color: MaterialTheme.brandPrimary.withValues(
+                          alpha: 0.3,
+                        ),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -201,7 +197,7 @@ class _ReservationFormState extends State<ReservationForm> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: MaterialTheme.white.withOpacity(0.2),
+                          color: MaterialTheme.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -224,7 +220,7 @@ class _ReservationFormState extends State<ReservationForm> {
                         'Fill in the details to reserve a shared area',
                         style: TextStyle(
                           fontSize: 14,
-                          color: MaterialTheme.white.withOpacity(0.9),
+                          color: MaterialTheme.white.withValues(alpha: 0.9),
                         ),
                       ),
                     ],
@@ -241,7 +237,7 @@ class _ReservationFormState extends State<ReservationForm> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: MaterialTheme.black1.withOpacity(0.05),
+                        color: MaterialTheme.black1.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -249,7 +245,10 @@ class _ReservationFormState extends State<ReservationForm> {
                   ),
                   child: TextFormField(
                     controller: _titleController,
-                    style: const TextStyle(fontSize: 16, color: MaterialTheme.black1),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: MaterialTheme.black1,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'Enter activity name',
                       border: OutlineInputBorder(
@@ -288,9 +287,7 @@ class _ReservationFormState extends State<ReservationForm> {
                           color: MaterialTheme.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                        child: const Center(child: CircularProgressIndicator()),
                       );
                     }
 
@@ -303,7 +300,10 @@ class _ReservationFormState extends State<ReservationForm> {
                         ),
                         child: Column(
                           children: [
-                            const Icon(Icons.error_outline, color: MaterialTheme.stateError),
+                            const Icon(
+                              Icons.error_outline,
+                              color: MaterialTheme.stateError,
+                            ),
                             const SizedBox(height: 8),
                             Text(
                               'Error loading areas',
@@ -311,7 +311,9 @@ class _ReservationFormState extends State<ReservationForm> {
                             ),
                             const SizedBox(height: 8),
                             TextButton(
-                              onPressed: () => context.read<SharedAreaCubit>().loadSharedAreas(),
+                              onPressed: () => context
+                                  .read<SharedAreaCubit>()
+                                  .loadSharedAreas(),
                               child: const Text('Retry'),
                             ),
                           ],
@@ -340,14 +342,16 @@ class _ReservationFormState extends State<ReservationForm> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: MaterialTheme.black1.withOpacity(0.05),
+                              color: MaterialTheme.black1.withValues(
+                                alpha: 0.05,
+                              ),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
                           ],
                         ),
                         child: DropdownButtonFormField<SharedArea>(
-                          value: _selectedArea,
+                          initialValue: _selectedArea,
                           decoration: InputDecoration(
                             hintText: 'Select an area',
                             border: OutlineInputBorder(
@@ -399,7 +403,7 @@ class _ReservationFormState extends State<ReservationForm> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: MaterialTheme.black1.withOpacity(0.05),
+                          color: MaterialTheme.black1.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -407,7 +411,10 @@ class _ReservationFormState extends State<ReservationForm> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today, color: MaterialTheme.brandPrimary),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: MaterialTheme.brandPrimary,
+                        ),
                         const SizedBox(width: 12),
                         Text(
                           DateFormat('yyyy-MM-dd').format(_selectedDate),
@@ -422,21 +429,20 @@ class _ReservationFormState extends State<ReservationForm> {
                 ),
                 const SizedBox(height: 24),
 
-                // Info Banner
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: MaterialTheme.brandPrimary.withOpacity(0.1),
+                    color: MaterialTheme.stateInfo.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: MaterialTheme.brandPrimary.withOpacity(0.3),
+                      color: MaterialTheme.stateInfo.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.info_outline,
-                        color: MaterialTheme.brandPrimary,
+                        color: MaterialTheme.stateInfo,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -445,7 +451,7 @@ class _ReservationFormState extends State<ReservationForm> {
                           'Reservations are available from 7:00 AM to 8:00 PM (max 2 hours)',
                           style: TextStyle(
                             fontSize: 13,
-                            color: MaterialTheme.brandPrimary.withOpacity(0.9),
+                            color: MaterialTheme.stateInfo,
                           ),
                         ),
                       ),
@@ -466,7 +472,7 @@ class _ReservationFormState extends State<ReservationForm> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: MaterialTheme.black1.withOpacity(0.05),
+                          color: MaterialTheme.black1.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -474,7 +480,10 @@ class _ReservationFormState extends State<ReservationForm> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.access_time, color: MaterialTheme.brandPrimary),
+                        const Icon(
+                          Icons.access_time,
+                          color: MaterialTheme.brandPrimary,
+                        ),
                         const SizedBox(width: 12),
                         Text(
                           _startTime.format(context),
@@ -499,7 +508,7 @@ class _ReservationFormState extends State<ReservationForm> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: MaterialTheme.black1.withOpacity(0.05),
+                        color: MaterialTheme.black1.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -535,7 +544,9 @@ class _ReservationFormState extends State<ReservationForm> {
                         max: 2.0,
                         divisions: 3,
                         activeColor: MaterialTheme.brandPrimary,
-                        inactiveColor: MaterialTheme.brandPrimary.withOpacity(0.2),
+                        inactiveColor: MaterialTheme.brandPrimary.withValues(
+                          alpha: 0.2,
+                        ),
                         label: _formatDuration(_durationHours),
                         onChanged: (value) {
                           setState(() {
@@ -546,10 +557,34 @@ class _ReservationFormState extends State<ReservationForm> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
-                          Text('0.5h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
-                          Text('1h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
-                          Text('1.5h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
-                          Text('2h', style: TextStyle(fontSize: 12, color: MaterialTheme.gray2)),
+                          Text(
+                            '0.5h',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: MaterialTheme.gray2,
+                            ),
+                          ),
+                          Text(
+                            '1h',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: MaterialTheme.gray2,
+                            ),
+                          ),
+                          Text(
+                            '1.5h',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: MaterialTheme.gray2,
+                            ),
+                          ),
+                          Text(
+                            '2h',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: MaterialTheme.gray2,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -561,7 +596,7 @@ class _ReservationFormState extends State<ReservationForm> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: MaterialTheme.brandPrimary.withOpacity(0.05),
+                    color: MaterialTheme.brandPrimary.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -576,7 +611,9 @@ class _ReservationFormState extends State<ReservationForm> {
                         ),
                       ),
                       Text(
-                        TimeOfDay.fromDateTime(_calculateEndTime()).format(context),
+                        TimeOfDay.fromDateTime(
+                          _calculateEndTime(),
+                        ).format(context),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -592,7 +629,7 @@ class _ReservationFormState extends State<ReservationForm> {
                 BlocBuilder<ReservationCubit, ReservationState>(
                   builder: (context, state) {
                     final isLoading = state is ReservationLoading;
-                    
+
                     return Container(
                       height: 56,
                       decoration: BoxDecoration(
@@ -600,7 +637,9 @@ class _ReservationFormState extends State<ReservationForm> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: MaterialTheme.brandPrimary.withOpacity(0.4),
+                            color: MaterialTheme.brandPrimary.withValues(
+                              alpha: 0.4,
+                            ),
                             blurRadius: 15,
                             offset: const Offset(0, 8),
                           ),
@@ -627,9 +666,11 @@ class _ReservationFormState extends State<ReservationForm> {
                             : const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.check_circle, 
-                                       size: 22, 
-                                       color: MaterialTheme.white),
+                                  Icon(
+                                    Icons.check_circle,
+                                    size: 22,
+                                    color: MaterialTheme.white,
+                                  ),
                                   SizedBox(width: 12),
                                   Text(
                                     'Create Reservation',
@@ -668,8 +709,7 @@ class _ReservationFormState extends State<ReservationForm> {
   String _formatDuration(double hours) {
     if (hours == 0.5) return '30 minutes';
     if (hours == 1.0) return '1 hour';
-    if (hours == 1.5) return '1.5 hours';
-    if (hours == 2.0) return '2 hours';
-    return '${hours}h';
+    if (hours < 2.0) return '$hours hours';
+    return '${hours.toStringAsFixed(hours.truncateToDouble() == hours ? 0 : 1)} hours';
   }
 }

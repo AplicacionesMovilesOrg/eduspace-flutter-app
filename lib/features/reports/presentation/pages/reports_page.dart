@@ -326,7 +326,7 @@ class _ResourceSelector extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: selectedId,
+              initialValue: selectedId,
               decoration: const InputDecoration(border: OutlineInputBorder()),
               items: resources
                   .map(

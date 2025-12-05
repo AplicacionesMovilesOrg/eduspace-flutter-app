@@ -49,10 +49,18 @@ class LoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(
-                  Icons.school_rounded,
-                  size: 90,
-                  color: eduBlue,
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.school_rounded,
+                      size: 90,
+                      color: eduBlue,
+                    );
+                  },
                 ),
                 const SizedBox(height: 24),
                 const Text(
@@ -79,20 +87,6 @@ class LoginPage extends StatelessWidget {
                 const _UsernameField(primaryColor: eduBlue),
                 const SizedBox(height: 20),
                 const _PasswordField(primaryColor: eduBlue),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      foregroundColor: eduLightBlue,
-                    ),
-                    child: const Text(
-                      '¿Olvidaste tu contraseña?',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 32),
                 const _LoginButton(btnColor: eduBlue),
                 const SizedBox(height: 48),

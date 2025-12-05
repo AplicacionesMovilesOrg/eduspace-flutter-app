@@ -24,10 +24,7 @@ class ClassroomCard extends StatelessWidget {
                 color: colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                Icons.school,
-                color: colorScheme.onPrimaryContainer,
-              ),
+              child: Icon(Icons.school, color: colorScheme.onPrimaryContainer),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -44,10 +41,7 @@ class ClassroomCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     classroom.description,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

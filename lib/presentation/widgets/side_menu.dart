@@ -127,7 +127,13 @@ class SideMenu extends StatelessWidget {
                   activeBg: selectedBg,
                   textColor: textDark,
                   textStyle: menuTextStyle,
-                  onTap: () {},
+                  onTap: () {
+                    if (currentPage != 'home') {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
                 ),
               ],
             ),

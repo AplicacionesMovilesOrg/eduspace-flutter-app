@@ -18,4 +18,18 @@ class ApiConstants {
   static String getSharedAreaByIdPath(String areaId) {
     return "/shared-area/$areaId";
   }
+
+  static String getClassroomsByTeacherPath(String teacherId) {
+    return "/classrooms/teachers/$teacherId";
+  }
+
+  static String getClassroomResourcesPath(String classroomId) {
+    return "/classrooms/$classroomId/resources";
+  }
+
+  static String getReportsByResourcePath(String resourceId) {
+    return "/reports/resources/$resourceId";
+  }
+
+  static const String createReportEndpoint = "/reports";
 }

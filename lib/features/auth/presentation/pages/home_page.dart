@@ -15,8 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const Color eduBlue = Color(0xFF1E88E5);
-
   @override
   void initState() {
     super.initState();
@@ -32,6 +30,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         final user = state is Authenticated ? state.user : null;
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         final role = user?.role ?? '';
 
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: colorScheme.surface,
           drawer: const SideMenu(),
           appBar: AppBar(
             title: const Text(
@@ -47,8 +47,8 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             centerTitle: true,
-            backgroundColor: eduBlue,
-            foregroundColor: Colors.white,
+            backgroundColor: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
             elevation: 0,
           ),
           body: Column(
@@ -56,26 +56,30 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24.0),
-                decoration: const BoxDecoration(
-                  color: eduBlue,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
                 child: Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 40,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, size: 50, color: eduBlue),
+                      backgroundColor: colorScheme.surface,
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: colorScheme.primary,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     const SizedBox(height: 4),
                     Text(
                       username,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: colorScheme.onPrimary,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -87,13 +91,13 @@ class _HomePageState extends State<HomePage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: colorScheme.onPrimary.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         _formatRole(role),
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: colorScheme.onPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -105,7 +109,11 @@ class _HomePageState extends State<HomePage> {
                 child: BlocBuilder<ClassroomCubit, ClassroomState>(
                   builder: (context, classroomState) {
                     if (classroomState is ClassroomLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: colorScheme.primary,
+                        ),
+                      );
                     }
 
                     if (classroomState is ClassroomError) {
@@ -116,13 +124,13 @@ class _HomePageState extends State<HomePage> {
                             Icon(
                               Icons.error_outline,
                               size: 64,
-                              color: Colors.red.shade300,
+                              color: colorScheme.error,
                             ),
                             const SizedBox(height: 16),
                             Text(
                               'Error loading courses',
                               style: TextStyle(
-                                color: Colors.grey.shade700,
+                                color: colorScheme.onSurface,
                                 fontSize: 18,
                               ),
                             ),
@@ -134,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                 classroomState.message,
                                 style: TextStyle(
-                                  color: Colors.grey.shade500,
+                                  color: colorScheme.onSurfaceVariant,
                                   fontSize: 14,
                                 ),
                                 textAlign: TextAlign.center,
@@ -154,12 +162,14 @@ class _HomePageState extends State<HomePage> {
                               Icon(
                                 Icons.class_outlined,
                                 size: 64,
-                                color: Colors.grey.shade300,
+                                color: colorScheme.outlineVariant,
                               ),
                               const SizedBox(height: 16),
                               Text(
                                 'No courses assigned',
-                                style: TextStyle(color: Colors.grey.shade500),
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
                               ),
                             ],
                           ),
@@ -184,12 +194,14 @@ class _HomePageState extends State<HomePage> {
                           Icon(
                             Icons.class_outlined,
                             size: 64,
-                            color: Colors.grey.shade300,
+                            color: colorScheme.outlineVariant,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'Your courses will appear here',
-                            style: TextStyle(color: Colors.grey.shade500),
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ],
                       ),

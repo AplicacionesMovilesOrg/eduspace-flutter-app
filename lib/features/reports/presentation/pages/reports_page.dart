@@ -57,9 +57,15 @@ class _ReportsPageState extends State<ReportsPage> {
           listener: (context, state) {
             if (state.status == ReportStatus.failure &&
                 state.errorMessage != null) {
+              final colorScheme = Theme.of(context).colorScheme;
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              ).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMessage!),
+                  backgroundColor: colorScheme.error,
+                ),
+              );
             }
           },
           builder: (context, state) {
@@ -207,7 +213,7 @@ class _ReportsPageState extends State<ReportsPage> {
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),

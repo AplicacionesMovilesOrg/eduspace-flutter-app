@@ -14,11 +14,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Colores del tema
-    final Color primaryBlue = const Color(0xFF4285F4);
-    final Color selectedBg = const Color(0xFFE3F2FD);
-    final Color logoutRed = const Color(0xFFD32F2F);
-    final Color textDark = const Color(0xFF1F1F1F);
+    final colorScheme = Theme.of(context).colorScheme;
 
     final TextStyle menuTextStyle = const TextStyle(
       fontSize: 15,
@@ -26,22 +22,21 @@ class SideMenu extends StatelessWidget {
     );
 
     return Drawer(
-      backgroundColor: const Color(0xFFF0F8FF),
+      backgroundColor: colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         children: [
-          // Header
           Container(
             width: double.infinity,
             height: 120,
-            color: primaryBlue,
+            color: colorScheme.primary,
             alignment: Alignment.center,
             child: SafeArea(
               bottom: false,
-              child: const Text(
+              child: Text(
                 'Eduspace',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: colorScheme.onPrimary,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -51,7 +46,6 @@ class SideMenu extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Body
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -60,9 +54,9 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.home_filled,
                   text: 'Home',
                   isSelected: currentPage == 'home',
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
+                  activeColor: colorScheme.primary,
+                  activeBg: colorScheme.primaryContainer,
+                  textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
                     if (currentPage != 'home') {
@@ -77,9 +71,9 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.edit,
                   text: 'Reservations',
                   isSelected: currentPage == 'reservations',
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
+                  activeColor: colorScheme.primary,
+                  activeBg: colorScheme.primaryContainer,
+                  textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
                     final authState = context.read<AuthBloc>().state;
@@ -101,9 +95,9 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.calendar_today,
                   text: 'My Reservations',
                   isSelected: currentPage == 'my_reservations',
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
+                  activeColor: colorScheme.primary,
+                  activeBg: colorScheme.primaryContainer,
+                  textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
                     final authState = context.read<AuthBloc>().state;
@@ -124,9 +118,9 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.campaign_outlined,
                   text: 'My Reports',
                   isSelected: currentPage == 'my_reports',
-                  activeColor: primaryBlue,
-                  activeBg: selectedBg,
-                  textColor: textDark,
+                  activeColor: colorScheme.primary,
+                  activeBg: colorScheme.primaryContainer,
+                  textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
                     final authState = context.read<AuthBloc>().state;
@@ -146,7 +140,6 @@ class SideMenu extends StatelessWidget {
             ),
           ),
 
-          // Footer
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
             child: Column(
@@ -154,11 +147,11 @@ class SideMenu extends StatelessWidget {
                 const Divider(height: 30, thickness: 1),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.logout, color: logoutRed),
+                  leading: Icon(Icons.logout, color: colorScheme.error),
                   title: Text(
                     'Logout',
                     style: menuTextStyle.copyWith(
-                      color: logoutRed,
+                      color: colorScheme.error,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -175,7 +168,6 @@ class SideMenu extends StatelessWidget {
     );
   }
 
-  // --- Widgets Auxiliares ---
   Widget _buildMenuItem({
     required IconData icon,
     required String text,
@@ -190,25 +182,25 @@ class SideMenu extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 4),
       decoration: BoxDecoration(
         color: isSelected ? activeBg : Colors.transparent,
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
         leading: Icon(
           icon,
-          color: isSelected ? activeColor : Colors.black87,
+          color: isSelected ? activeColor : textColor.withValues(alpha: 0.6),
           size: 22,
         ),
         title: Text(
           text,
           style: textStyle.copyWith(
             color: isSelected ? activeColor : textColor,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
           ),
         ),
         onTap: onTap,
         dense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

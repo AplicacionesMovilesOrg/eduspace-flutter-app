@@ -132,7 +132,7 @@ class _ReservationFormState extends State<ReservationForm> {
         ),
         backgroundColor: MaterialTheme.stateError,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
       ),
     );
@@ -155,7 +155,7 @@ class _ReservationFormState extends State<ReservationForm> {
               backgroundColor: MaterialTheme.stateSuccess,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
               margin: const EdgeInsets.all(16),
             ),

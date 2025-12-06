@@ -10,9 +10,6 @@ import 'package:eduspace_flutter_app/features/auth/presentation/blocs/login_stat
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  static const Color eduBlue = Color(0xFF1E88E5);
-  static const Color eduLightBlue = Color(0xFF64B5F6);
-
   void _handleLoginSuccess(BuildContext context, LoginState state) {
     if (state.user != null) {
       context.read<AuthBloc>().add(LoggedIn(state.user!));
@@ -20,10 +17,11 @@ class LoginPage extends StatelessWidget {
   }
 
   void _handleLoginFailure(BuildContext context, String? message) {
+    final colorScheme = Theme.of(context).colorScheme;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message ?? 'Authentication error'),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: colorScheme.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -31,8 +29,10 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       body: BlocListener<LoginBloc, LoginState>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
@@ -55,21 +55,21 @@ class LoginPage extends StatelessWidget {
                   height: 120,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(
+                    return Icon(
                       Icons.school_rounded,
                       size: 90,
-                      color: eduBlue,
+                      color: colorScheme.primary,
                     );
                   },
                 ),
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   'EduSpace',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.w800,
-                    color: eduBlue,
+                    color: colorScheme.primary,
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -79,21 +79,24 @@ class LoginPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey.shade600,
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 48),
-                const _UsernameField(primaryColor: eduBlue),
+                _UsernameField(primaryColor: colorScheme.primary),
                 const SizedBox(height: 20),
-                const _PasswordField(primaryColor: eduBlue),
+                _PasswordField(primaryColor: colorScheme.primary),
                 const SizedBox(height: 32),
-                const _LoginButton(btnColor: eduBlue),
+                _LoginButton(btnColor: colorScheme.primary),
                 const SizedBox(height: 48),
                 Text(
                   '© 2025 EduSpace Platform',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                  ),
                 ),
               ],
             ),
@@ -110,6 +113,8 @@ class _UsernameField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return TextField(
       onChanged: (value) =>
           context.read<LoginBloc>().add(OnUsernameChanged(username: value)),
@@ -119,25 +124,28 @@ class _UsernameField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Username',
         hintText: 'e.g. jperez',
-        prefixIcon: Icon(Icons.person_outline, color: Colors.grey.shade500),
+        prefixIcon: Icon(
+          Icons.person_outline,
+          color: colorScheme.onSurfaceVariant,
+        ),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18,
           horizontal: 16,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         filled: true,
-        fillColor: Colors.grey.shade50,
+        fillColor: colorScheme.surfaceContainerHighest,
         floatingLabelStyle: TextStyle(color: primaryColor),
       ),
     );
@@ -150,6 +158,8 @@ class _PasswordField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) =>
           previous.isPasswordVisible != current.isPasswordVisible,
@@ -164,13 +174,16 @@ class _PasswordField extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Password',
             hintText: '••••••',
-            prefixIcon: Icon(Icons.lock_outline, color: Colors.grey.shade500),
+            prefixIcon: Icon(
+              Icons.lock_outline,
+              color: colorScheme.onSurfaceVariant,
+            ),
             suffixIcon: IconButton(
               icon: Icon(
                 state.isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off,
-                color: Colors.grey.shade500,
+                color: colorScheme.onSurfaceVariant,
               ),
               onPressed: () => context.read<LoginBloc>().add(
                 const TogglePasswordVisibility(),
@@ -181,19 +194,19 @@ class _PasswordField extends StatelessWidget {
               horizontal: 16,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.grey.shade200),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: colorScheme.outlineVariant),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: primaryColor, width: 2),
             ),
             filled: true,
-            fillColor: Colors.grey.shade50,
+            fillColor: colorScheme.surfaceContainerHighest,
             floatingLabelStyle: TextStyle(color: primaryColor),
           ),
         );
@@ -223,7 +236,7 @@ class _LoginButton extends StatelessWidget {
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
             child: const Text(

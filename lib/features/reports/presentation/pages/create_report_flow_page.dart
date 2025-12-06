@@ -26,7 +26,6 @@ class _CreateReportFlowPageState extends State<CreateReportFlowPage> {
 
   String? _selectedClassroomId;
   String? _selectedResourceId;
-  String? _teacherId;
 
   final _kindController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -65,7 +64,6 @@ class _CreateReportFlowPageState extends State<CreateReportFlowPage> {
         teacherProfile.id,
       );
       setState(() {
-        _teacherId = teacherProfile.id;
         _classrooms = classrooms;
         _isLoading = false;
       });

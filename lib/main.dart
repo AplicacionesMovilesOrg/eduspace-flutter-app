@@ -2,6 +2,8 @@ import 'package:eduspace_flutter_app/core/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:eduspace_flutter_app/core/services/storage_service.dart';
 import 'package:eduspace_flutter_app/features/auth/data/auth_service.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
@@ -17,6 +19,10 @@ import 'package:eduspace_flutter_app/features/classroom/presentation/blocs/class
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final storageService = StorageService();
   final authBloc = AuthBloc(storageService: storageService);

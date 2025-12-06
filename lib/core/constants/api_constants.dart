@@ -32,4 +32,16 @@ class ApiConstants {
   }
 
   static const String createReportEndpoint = "/reports";
+
+  static String getTeacherReportsPath(String teacherId) {
+    return "/reports/teachers/$teacherId";
+  }
+
+  static String updateReportPath(String reportId) {
+    return "/reports/$reportId";
+  }
+
+  static String deleteReportPath(String reportId) {
+    return "/reports/$reportId";
+  }
 }

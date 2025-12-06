@@ -5,6 +5,7 @@ import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/reservation_create_page.dart';
 import 'package:eduspace_flutter_app/features/sharedSpace/presentation/pages/my_reservations_page.dart';
+import 'package:eduspace_flutter_app/features/reports/presentation/pages/my_reports_page.dart';
 
 class SideMenu extends StatelessWidget {
   final String currentPage;
@@ -121,17 +122,23 @@ class SideMenu extends StatelessWidget {
 
                 _buildMenuItem(
                   icon: Icons.campaign_outlined,
-                  text: 'Breakdown Reports',
-                  isSelected: currentPage == 'breakdown_reports',
+                  text: 'My Reports',
+                  isSelected: currentPage == 'my_reports',
                   activeColor: primaryBlue,
                   activeBg: selectedBg,
                   textColor: textDark,
                   textStyle: menuTextStyle,
                   onTap: () {
-                    if (currentPage != 'home') {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    } else {
+                    final authState = context.read<AuthBloc>().state;
+                    if (authState is Authenticated) {
                       Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MyReportsPage(teacherId: authState.user.id),
+                        ),
+                      );
                     }
                   },
                 ),

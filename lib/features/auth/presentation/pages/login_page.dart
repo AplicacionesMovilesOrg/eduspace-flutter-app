@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eduspace_flutter_app/core/enums/status.dart';
+import 'package:eduspace_flutter_app/core/ui/theme.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/login_bloc.dart';
@@ -42,63 +43,98 @@ class LoginPage extends StatelessWidget {
             _handleLoginFailure(context, state.message);
           }
         },
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(
-                      Icons.school_rounded,
-                      size: 90,
-                      color: colorScheme.primary,
-                    );
-                  },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: MaterialTheme.createLightGradient(),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Container(
+                padding: const EdgeInsets.all(32.0),
+                decoration: BoxDecoration(
+                  color: MaterialTheme.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: MaterialTheme.black1.withValues(alpha: 0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'EduSpace',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w800,
-                    color: colorScheme.primary,
-                    letterSpacing: 1.2,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: MaterialTheme.createBrandGradient(),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: MaterialTheme.brandPrimary.withValues(
+                              alpha: 0.3,
+                            ),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.school_rounded,
+                            size: 80,
+                            color: MaterialTheme.white,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'EduSpace',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w800,
+                        color: colorScheme.onSurface,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Teacher Portal',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 48),
+                    _UsernameField(primaryColor: MaterialTheme.brandPrimary),
+                    const SizedBox(height: 20),
+                    _PasswordField(primaryColor: MaterialTheme.brandPrimary),
+                    const SizedBox(height: 32),
+                    _LoginButton(btnColor: MaterialTheme.brandPrimary),
+                    const SizedBox(height: 48),
+                    Text(
+                      '© 2025 EduSpace Platform',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Teacher Portal',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 48),
-                _UsernameField(primaryColor: colorScheme.primary),
-                const SizedBox(height: 20),
-                _PasswordField(primaryColor: colorScheme.primary),
-                const SizedBox(height: 32),
-                _LoginButton(btnColor: colorScheme.primary),
-                const SizedBox(height: 48),
-                Text(
-                  '© 2025 EduSpace Platform',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

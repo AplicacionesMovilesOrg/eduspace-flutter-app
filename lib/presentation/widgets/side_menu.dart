@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eduspace_flutter_app/core/ui/theme.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_event.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state.dart';
@@ -22,21 +23,23 @@ class SideMenu extends StatelessWidget {
     );
 
     return Drawer(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: MaterialTheme.white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: Column(
         children: [
           Container(
             width: double.infinity,
             height: 120,
-            color: colorScheme.primary,
+            decoration: BoxDecoration(
+              gradient: MaterialTheme.createBrandGradient(),
+            ),
             alignment: Alignment.center,
             child: SafeArea(
               bottom: false,
-              child: Text(
+              child: const Text(
                 'Eduspace',
                 style: TextStyle(
-                  color: colorScheme.onPrimary,
+                  color: MaterialTheme.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -54,8 +57,8 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.home_filled,
                   text: 'Home',
                   isSelected: currentPage == 'home',
-                  activeColor: colorScheme.primary,
-                  activeBg: colorScheme.primaryContainer,
+                  activeColor: MaterialTheme.brandPrimary,
+                  activeBg: MaterialTheme.brandPrimary.withValues(alpha: 0.1),
                   textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
@@ -71,8 +74,8 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.edit,
                   text: 'Reservations',
                   isSelected: currentPage == 'reservations',
-                  activeColor: colorScheme.primary,
-                  activeBg: colorScheme.primaryContainer,
+                  activeColor: MaterialTheme.brandPrimary,
+                  activeBg: MaterialTheme.brandPrimary.withValues(alpha: 0.1),
                   textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
@@ -95,8 +98,8 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.calendar_today,
                   text: 'My Reservations',
                   isSelected: currentPage == 'my_reservations',
-                  activeColor: colorScheme.primary,
-                  activeBg: colorScheme.primaryContainer,
+                  activeColor: MaterialTheme.brandPrimary,
+                  activeBg: MaterialTheme.brandPrimary.withValues(alpha: 0.1),
                   textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
@@ -118,8 +121,8 @@ class SideMenu extends StatelessWidget {
                   icon: Icons.campaign_outlined,
                   text: 'My Reports',
                   isSelected: currentPage == 'my_reports',
-                  activeColor: colorScheme.primary,
-                  activeBg: colorScheme.primaryContainer,
+                  activeColor: MaterialTheme.brandPrimary,
+                  activeBg: MaterialTheme.brandPrimary.withValues(alpha: 0.1),
                   textColor: colorScheme.onSurface,
                   textStyle: menuTextStyle,
                   onTap: () {
@@ -144,19 +147,22 @@ class SideMenu extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 30),
             child: Column(
               children: [
-                const Divider(height: 30, thickness: 1),
+                Divider(
+                  height: 30,
+                  thickness: 1,
+                  color: MaterialTheme.gray2.withValues(alpha: 0.2),
+                ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.logout, color: colorScheme.error),
+                  leading: const Icon(Icons.logout, color: MaterialTheme.stateError),
                   title: Text(
                     'Logout',
                     style: menuTextStyle.copyWith(
-                      color: colorScheme.error,
+                      color: MaterialTheme.stateError,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   onTap: () {
-                    Navigator.pop(context);
                     context.read<AuthBloc>().add(LoggedOut());
                   },
                 ),

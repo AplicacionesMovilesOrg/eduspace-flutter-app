@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eduspace_flutter_app/core/ui/theme.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_bloc.dart';
 import 'package:eduspace_flutter_app/features/auth/presentation/blocs/auth_state.dart';
 import 'package:eduspace_flutter_app/features/classroom/presentation/blocs/classroom_cubit.dart';
 import 'package:eduspace_flutter_app/features/classroom/presentation/widgets/classroom_card.dart';
-// Classroom detail navigation removed; cards are now read-only
 import 'package:eduspace_flutter_app/presentation/widgets/side_menu.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,176 +40,257 @@ class _HomePageState extends State<HomePage> {
 
         return Scaffold(
           backgroundColor: colorScheme.surface,
-          drawer: const SideMenu(),
+          drawer: const SideMenu(currentPage: 'home'),
           appBar: AppBar(
-            title: const Text(
-              'EduSpace Teacher',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            title: Text(
+              'Home',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             centerTitle: true,
-            backgroundColor: colorScheme.primary,
-            foregroundColor: colorScheme.onPrimary,
-            elevation: 0,
           ),
-          body: Column(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24.0),
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: MaterialTheme.createLightGradient(),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24.0),
+                  margin: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: MaterialTheme.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: MaterialTheme.black1.withValues(alpha: 0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                ),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundColor: colorScheme.surface,
-                      child: Icon(
-                        Icons.person,
-                        size: 50,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const SizedBox(height: 4),
-                    Text(
-                      username,
-                      style: TextStyle(
-                        color: colorScheme.onPrimary,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colorScheme.onPrimary.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        _formatRole(role),
-                        style: TextStyle(
-                          color: colorScheme.onPrimary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: BlocBuilder<ClassroomCubit, ClassroomState>(
-                  builder: (context, classroomState) {
-                    if (classroomState is ClassroomLoading) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: colorScheme.primary,
-                        ),
-                      );
-                    }
-
-                    if (classroomState is ClassroomError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline,
-                              size: 64,
-                              color: colorScheme.error,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Error loading courses',
-                              style: TextStyle(
-                                color: colorScheme.onSurface,
-                                fontSize: 18,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: MaterialTheme.createBrandGradient(),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: MaterialTheme.brandPrimary.withValues(
+                                alpha: 0.3,
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32,
-                              ),
-                              child: Text(
-                                classroomState.message,
-                                style: TextStyle(
-                                  color: colorScheme.onSurfaceVariant,
-                                  fontSize: 14,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
                             ),
                           ],
                         ),
-                      );
-                    }
-
-                    if (classroomState is ClassroomLoaded) {
-                      if (classroomState.classrooms.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.class_outlined,
-                                size: 64,
-                                color: colorScheme.outlineVariant,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No courses assigned',
-                                style: TextStyle(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
+                        child: const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: MaterialTheme.white,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        username,
+                        style: TextStyle(
+                          color: colorScheme.onSurface,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: MaterialTheme.brandPrimary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          _formatRole(role),
+                          style: const TextStyle(
+                            color: MaterialTheme.brandPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: BlocBuilder<ClassroomCubit, ClassroomState>(
+                    builder: (context, classroomState) {
+                      if (classroomState is ClassroomLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: MaterialTheme.brandPrimary,
                           ),
                         );
                       }
 
-                      return ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: classroomState.classrooms.length,
-                        itemBuilder: (context, index) {
-                          return ClassroomCard(
-                            classroom: classroomState.classrooms[index],
-                          );
-                        },
-                      );
-                    }
-
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.class_outlined,
-                            size: 64,
-                            color: colorScheme.outlineVariant,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Your courses will appear here',
-                            style: TextStyle(
-                              color: colorScheme.onSurfaceVariant,
+                      if (classroomState is ClassroomError) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: MaterialTheme.stateError.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.error_outline,
+                                    size: 60,
+                                    color: MaterialTheme.stateError,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'Error loading courses',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  classroomState.message,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 24),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    final authState = context.read<AuthBloc>().state;
+                                    if (authState is Authenticated) {
+                                      context
+                                          .read<ClassroomCubit>()
+                                          .loadClassrooms(authState.user.id);
+                                    }
+                                  },
+                                  icon: const Icon(Icons.refresh),
+                                  label: const Text('Retry'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: MaterialTheme.brandPrimary,
+                                    foregroundColor: MaterialTheme.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  },
+                        );
+                      }
+
+                      if (classroomState is ClassroomLoaded) {
+                        if (classroomState.classrooms.isEmpty) {
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(30),
+                                    decoration: BoxDecoration(
+                                      gradient: MaterialTheme.createBrandGradient(),
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: MaterialTheme.brandPrimary.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                          blurRadius: 20,
+                                          offset: const Offset(0, 10),
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.class_outlined,
+                                      size: 60,
+                                      color: MaterialTheme.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Text(
+                                    'No courses assigned',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'Your courses will appear here',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: colorScheme.onSurface.withValues(
+                                        alpha: 0.6,
+                                      ),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            final authState = context.read<AuthBloc>().state;
+                            if (authState is Authenticated) {
+                              context
+                                  .read<ClassroomCubit>()
+                                  .loadClassrooms(authState.user.id);
+                            }
+                          },
+                          color: MaterialTheme.brandPrimary,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: classroomState.classrooms.length,
+                            itemBuilder: (context, index) {
+                              return ClassroomCard(
+                                classroom: classroomState.classrooms[index],
+                              );
+                            },
+                          ),
+                        );
+                      }
+
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

@@ -21,6 +21,10 @@ class AuthService {
         body: jsonEncode({'username': username, 'password': password}),
       );
 
+      if (response.statusCode == 401) {
+        throw Exception('Invalid username or password');
+      }
+
       if (response.statusCode != 200) {
         throw Exception('Failed to login: ${response.statusCode}');
       }

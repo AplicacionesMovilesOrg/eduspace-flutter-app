@@ -163,6 +163,8 @@ class SideMenu extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                     context.read<AuthBloc>().add(LoggedOut());
                   },
                 ),

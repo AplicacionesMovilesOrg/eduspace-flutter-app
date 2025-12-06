@@ -67,34 +67,18 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        gradient: MaterialTheme.createBrandGradient(),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: MaterialTheme.brandPrimary.withValues(
-                              alpha: 0.3,
-                            ),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.school_rounded,
-                            size: 80,
-                            color: MaterialTheme.white,
-                          );
-                        },
-                      ),
+                    Image.asset(
+                      'assets/images/logo.png',
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.school_rounded,
+                          size: 120,
+                          color: MaterialTheme.brandPrimary,
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
                     Text(
@@ -160,6 +144,7 @@ class _UsernameField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Username',
         hintText: 'e.g. jperez',
+        hintStyle: TextStyle(color: Colors.grey[400]),
         prefixIcon: Icon(
           Icons.person_outline,
           color: colorScheme.onSurfaceVariant,
@@ -170,18 +155,18 @@ class _UsernameField extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: const BorderSide(color: Colors.black87, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: colorScheme.outlineVariant),
+          borderSide: const BorderSide(color: Colors.black87, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         filled: true,
-        fillColor: colorScheme.surfaceContainerHighest,
+        fillColor: Colors.grey[50],
         floatingLabelStyle: TextStyle(color: primaryColor),
       ),
     );
@@ -210,6 +195,7 @@ class _PasswordField extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'Password',
             hintText: '••••••',
+            hintStyle: TextStyle(color: Colors.grey[400]),
             prefixIcon: Icon(
               Icons.lock_outline,
               color: colorScheme.onSurfaceVariant,
@@ -231,18 +217,18 @@ class _PasswordField extends StatelessWidget {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderSide: const BorderSide(color: Colors.black87, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: colorScheme.outlineVariant),
+              borderSide: const BorderSide(color: Colors.black87, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: primaryColor, width: 2),
             ),
             filled: true,
-            fillColor: colorScheme.surfaceContainerHighest,
+            fillColor: Colors.grey[50],
             floatingLabelStyle: TextStyle(color: primaryColor),
           ),
         );
